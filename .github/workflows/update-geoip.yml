@@ -22,7 +22,7 @@ jobs:
           lfs: true
 
       - name: Get sha256 of current GeoIP2 database
-        run: echo "CURRENT_DB_SHA=$(cat bin/GeoLite2-City.mmdb.sha256)" >> $GITHUB_ENV
+        run: echo "CURRENT_DB_SHA=$(cat GeoLite2-City.mmdb.sha256)" >> $GITHUB_ENV
 
       - name: Get sha256 of latest GeoIP2 database
         run: echo "LATEST_DB_SHA=$(curl -s -L -u $GEOIP_AUTH_HEADER "$GEOIP_DOWNLOAD_URL?suffix=tar.gz.sha256" | grep -Eo "^[[:alnum:]]+")" >> $GITHUB_ENV
@@ -41,25 +41,25 @@ jobs:
           mv -f "$folder/GeoLite2-City.mmdb" bin/GeoLite2-City.mmdb
           rm -rf $folder bin/GeoLite2-City.tar.gz
 
-      # - name: Commit the new GeoIP2 database and the latest sha256
-      #   if: ${{ env.CURRENT_DB_SHA != env.LATEST_DB_SHA }}
-      #   run: |
-      #     git checkout -b chore/update-geoip-db
-      #     git config push.autoSetupRemote true
-      #     git config user.name 'github-actions[bot]'
-      #     git config user.email 'github-actions[bot]@users.noreply.github.com'
-      #     git add bin/GeoLite2-City.mmdb bin/GeoLite2-City.mmdb.sha256
-      #     git commit -m "Commit from GitHub Actions (update-geoip)"
-      #     git push
+      - name: Commit the new GeoIP2 database and the latest sha256
+        if: ${{ env.CURRENT_DB_SHA != env.LATEST_DB_SHA }}
+        run: |
+          git checkout -b chore/update-geoip-db
+          git config push.autoSetupRemote true
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add bin/GeoLite2-City.mmdb bin/GeoLite2-City.mmdb.sha256
+          git commit -m "Commit from GitHub Actions (update-geoip)"
+          git push
 
-      # - name: Create a Pull Request with the latest DB
-      #   env:
-      #     GH_TOKEN: ${{ github.token }}
-      #   if: ${{ env.CURRENT_DB_SHA != env.LATEST_DB_SHA }}
-      #   run: |
-      #     modified_date=$(curl -s -L -I -u $GEOIP_AUTH_HEADER "$GEOIP_DOWNLOAD_URL?suffix=tar.gz" | grep "last-modified:")
-      #     gh pr create -B main -t "Update GeoIP DB" -b "Updating the GeoIP DB and its sha256.
-      #     $modified_date
-      #     Current SHA: $CURRENT_DB_SHA
-      #     Latest SHA: $LATEST_DB_SHA
-      #     "
+      - name: Create a Pull Request with the latest DB
+        env:
+          GH_TOKEN: ${{ github.token }}
+        if: ${{ env.CURRENT_DB_SHA != env.LATEST_DB_SHA }}
+        run: |
+          modified_date=$(curl -s -L -I -u $GEOIP_AUTH_HEADER "$GEOIP_DOWNLOAD_URL?suffix=tar.gz" | grep "last-modified:")
+          gh pr create -B main -t "Update GeoIP DB" -b "Updating the GeoIP DB and its sha256.
+          $modified_date
+          Current SHA: $CURRENT_DB_SHA
+          Latest SHA: $LATEST_DB_SHA
+          "
