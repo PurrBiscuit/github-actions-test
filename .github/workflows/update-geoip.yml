@@ -27,19 +27,19 @@ jobs:
       - name: Get sha256 of latest GeoIP2 database
         run: echo "LATEST_DB_SHA=$(curl -s -L -u $GEOIP_AUTH_HEADER "$GEOIP_DOWNLOAD_URL?suffix=tar.gz.sha256" | grep -Eo "^[[:alnum:]]+")" >> $GITHUB_ENV
 
-      # - name: Download and extract the latest GeoIP2 database
-      #   if: env.CURRENT_DB_SHA != env.LATEST_DB_SHA
-      #   run: |
-      #     # Download and extract the .tar.gz file
-      #     curl -s -L -u $GEOIP_AUTH_HEADER "$GEOIP_DOWNLOAD_URL?suffix=tar.gz" --output bin/GeoLite2-City.tar.gz
-      #     tar -xzf bin/GeoLite2-City.tar.gz -C bin
+      - name: Download and extract the latest GeoIP2 database
+        if: env.CURRENT_DB_SHA != env.LATEST_DB_SHA
+        run: |
+          # Download and extract the .tar.gz file
+          curl -s -L -u $GEOIP_AUTH_HEADER "$GEOIP_DOWNLOAD_URL?suffix=tar.gz" --output bin/GeoLite2-City.tar.gz
+          tar -xzf bin/GeoLite2-City.tar.gz -C bin
 
-      #     # Update the sha256 file and the DB and then remove the .tar.gz file
-      #     folder=$(find bin -maxdepth 1 -type d -name '*GeoLite*')
-      #     echo "folder is $folder"
-      #     echo $LATEST_DB_SHA > bin/GeoLite2-City.mmdb.sha256
-      #     mv -f "$folder/GeoLite2-City.mmdb" bin/GeoLite2-City.mmdb
-      #     rm -rf $folder bin/GeoLite2-City.tar.gz
+          # Update the sha256 file and the DB and then remove the .tar.gz file
+          folder=$(find bin -maxdepth 1 -type d -name '*GeoLite*')
+          echo "folder is $folder"
+          echo $LATEST_DB_SHA > bin/GeoLite2-City.mmdb.sha256
+          mv -f "$folder/GeoLite2-City.mmdb" bin/GeoLite2-City.mmdb
+          rm -rf $folder bin/GeoLite2-City.tar.gz
 
       # - name: Commit the new GeoIP2 database and the latest sha256
       #   if: ${{ env.CURRENT_DB_SHA != env.LATEST_DB_SHA }}
