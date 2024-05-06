@@ -23,7 +23,7 @@ jobs:
 
       - name: Get sha256 of current GeoIP2 database
         run: |
-          sha=$(cat GeoLite2-City.mmdb.sha256)
+          sha=$(cat bin/GeoLite2-City.mmdb.sha256)
           echo "CURRENT_DB_SHA=$sha" >> $GITHUB_ENV
 
       - name: Get sha256 of latest GeoIP2 database
