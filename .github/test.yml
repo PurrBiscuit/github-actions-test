@@ -1,0 +1,14 @@
+name: testing-github-actions
+
+jobs:
+  testing-github-actions:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Run tests
+      env:
+        SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
+      run: |
+        echo "Running tests"
+        echo "Tests passed"
+        echo "SUPER_SECRET is: $SUPER_SECRET"
