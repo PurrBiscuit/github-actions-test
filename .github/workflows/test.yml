@@ -6,21 +6,21 @@ on:
       - main
 
 jobs:
-  - testing-github-actions:
-      runs-on: ubuntu-latest
+  testing-github-actions:
+    runs-on: ubuntu-latest
 
-      steps:
-      - name: Job One
-        env:
-          SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
-        run: |
-          echo "Running tests"
-          echo "Tests passed"
-          echo "SUPER_SECRET is: $SUPER_SECRET"
-  - another-job:
-      runs-on: ubuntu-latest
+    steps:
+    - name: Job One
+      env:
+        SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
+      run: |
+        echo "Running tests"
+        echo "Tests passed"
+        echo "SUPER_SECRET is: $SUPER_SECRET"
+  another-job:
+    runs-on: ubuntu-latest
 
-      steps:
-      - name: Job Two
-        run: |
-          echo "Running another job in parallel"
+    steps:
+    - name: Job Two
+      run: |
+        echo "Running another job in parallel"
