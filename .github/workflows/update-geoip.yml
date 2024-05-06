@@ -1,5 +1,10 @@
 name: update-geoip
 
+on:
+  push:
+    branches:
+      - main
+
 env:
   # Account ID + API key
   GEOIP_AUTH_HEADER: 718541:${{ secrets.GEOLITE_API_KEY }}
