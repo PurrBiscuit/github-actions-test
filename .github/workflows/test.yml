@@ -1,5 +1,10 @@
 name: testing-github-actions
 
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   testing-github-actions:
     runs-on: ubuntu-latest
