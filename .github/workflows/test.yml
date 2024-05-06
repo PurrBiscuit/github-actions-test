@@ -1,4 +1,4 @@
-name: testing-github-actionzzz
+name: github-actions-test
 
 on:
   push:
